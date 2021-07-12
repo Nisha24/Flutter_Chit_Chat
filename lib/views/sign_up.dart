@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_chit_chat/services/auth.dart';
+import 'package:flutter_chit_chat/views/sign_in.dart';
 import 'package:flutter_chit_chat/widgets/widget.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -81,7 +83,15 @@ class SignUp extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(40),
               child: RaisedButton(
-                onPressed: () => debugPrint("Sign Up"),
+                onPressed: (){
+                  AuthMethods().AccountCreated(emailText.text.trim(), passwordText.text.trim()).then((value) {
+                    if(value == "Account Created"){
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Sign_InPage()), (route) => false);
+                    }else{
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Hi"  )));
+                    }
+                  });
+                },
                 splashColor: Colors.blue,
                 color: Colors.white,
                 child: Container(
@@ -134,7 +144,9 @@ class SignUp extends StatelessWidget {
                     style: TextStyle(fontSize: 16),
                   ),
                   FlatButton(
-                    onPressed: () => debugPrint("Login Now"),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => Sign_InPage()));
+                    },
                     child: Text(
                       "Login Now",
                       style: TextStyle(fontSize: 16),

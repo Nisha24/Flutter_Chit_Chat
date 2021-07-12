@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_chit_chat/services/auth.dart';
+import 'package:flutter_chit_chat/views/sign_up.dart';
 import 'package:flutter_chit_chat/widgets/widget.dart';
 
 class Sign_InPage extends StatefulWidget {
@@ -22,6 +24,9 @@ class _Sign_InPageState extends State<Sign_InPage> {
 }
 
 class SignIn extends StatelessWidget {
+  TextEditingController emailText = new TextEditingController();
+  TextEditingController passwordText = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
@@ -33,6 +38,7 @@ class SignIn extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             TextField(
+              controller: emailText,
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -44,6 +50,7 @@ class SignIn extends StatelessWidget {
               height: 10,
             ),
             TextField(
+                controller: passwordText,
                 style: TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -65,7 +72,15 @@ class SignIn extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(40),
               child: RaisedButton(
-                onPressed: () => debugPrint("Sign In"),
+                onPressed: (){
+                  AuthMethods().signIn(emailText.text.trim(), passwordText.text.trim()).then((value) {
+                    if(value == "Welcome"){
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => SignUpPage()), (route) => false);
+                    }else{
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Hi")));
+                    }
+                  });
+                },
                 splashColor: Colors.blue,
                 color: Colors.white,
                 child: Container(
@@ -118,7 +133,9 @@ class SignIn extends StatelessWidget {
                     style: TextStyle(fontSize: 16),
                   ),
                   FlatButton(
-                    onPressed: () => debugPrint("Register Now"),
+                    onPressed: (){
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
+                    },
                     child: Text(
                       "Register Now",
                       style: TextStyle(fontSize: 16),
